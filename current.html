@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Current</title>
+</head>
+<body>
+
+
+<!-- 1. The <iframe> (and video player) will replace this <div> tag. -->
+<div id="player"></div>
+
+<script src="https://js.estat.com/js/mu-7.0.min.js"></script>
+
+<script>
+
+    var tag = document.createElement('script');
+    var eTag;
+    tag.src = "https://www.youtube.com/iframe_api";
+    var firstScriptTag = document.getElementsByTagName('script')[0];
+    firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+    // 3. This function creates an <iframe> (and YouTube player)
+    //    after the API code downloads.
+    var player;
+    function onYouTubeIframeAPIReady() {
+        player = new YT.Player('player', {
+            height: '360',
+            width: '640',
+            videoId: 'KRZZL5saqSE',
+            events: {
+                'onStateChange': onPlayerStateChange
+            }
+        });
+
+    }
+
+    function showDuration() {
+        var duration = player.getDuration();
+        var currentTime = player.getCurrentTime();
+        var durationDiv = document.getElementById("duration");
+        var currentDiv = document.getElementById("current");
+        durationDiv.innerHTML = duration;
+        currentDiv.innerHTML = currentTime;
+
+    }
+    // Implementation of the position callback (return position in second)
+    var getPos = function() {
+
+
+
+
+
+        return Math.floor(player.getCurrentTime());
+    }
+
+    var confStreamingAnalytics = {
+        serial: "241041208720",
+        measure: "streaming",
+        consentType: "optin",
+        streaming: {
+            diffusion: "replay",
+            callbackPosition: getPos,
+            playerName: "TS-player-video-replay",
+            streamName: "JT-20141106",
+            probe: false,
+            streamGenre: "cmsGRHoumour"
+        },
+        mediaInfo: {
+            mediaDiffMode: "REPLAY",
+            mediaContentId:"123peppa456",
+            mediaChannel:"kiddsTV"
+        },
+        levels: {
+            level_1: "l1",
+            level_2: "l2",
+            level_3: "l3",
+            level_4: "l4",
+            level_5: "l5"
+        },
+        newLevels: {
+            newLevel_1: "nl1",
+            newLevel_2: "nl2",
+            newLevel_3: "nl3",
+            newLevel_4: "nl4",
+            newLevel_5: "nl5",
+            newLevel_6: "nl6",
+            newLevel_7: "nl7",
+            newLevel_8: "nl8",
+            newLevel_9: "nl9",
+            newLevel_10: "nl10",
+            newLevel_11: "nl11"
+        },
+        netMeasurement: "miCh",
+        debug: true
+
+    };
+
+
+    function onPlayerStateChange(event) {
+
+        // Implementation
+        // Notify stop when the stream stops
+
+        if (event.data == YT.PlayerState.PLAYING) {
+            eTag.notifyPlayer('play');
+
+            window.setInterval(showDuration, 500);
+        }
+
+        if (event.data == YT.PlayerState.PAUSED) {
+            eTag.notifyPlayer('pause');
+        }
+
+        if (event.data == YT.PlayerState.ENDED) {
+            eTag.notifyPlayer('stop');
+        }
+    }
+
+
+    var eSloaded = function() {
+
+        console.log("esLoaded");
+        eTag = new eStatTag(confStreamingAnalytics);
+        eTag.setDebug(true);
+    };
+
+    eSloaded();
+
+</script>
+
+<div id="duration"></div><br/>
+<div id="current"></div><br/>
+<br/><a href="hub.html">Retour hub</a><br/>
+
+</body>
+</html>
